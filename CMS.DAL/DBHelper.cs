@@ -6,11 +6,13 @@ using System.Data.OracleClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Practices.EnterpriseLibrary.Common;
+using Microsoft.Practices.EnterpriseLibrary.Data;
 
 namespace CMS.DAL
 {
     public class DBHelper
     {
-        public DbProviderFactory DB = DbProviderFactories.GetFactory("123");
+        public static Database DB = DatabaseFactory.CreateDatabase();
     }
 }
