@@ -1,0 +1,38 @@
+var loadi = layer.load('正在查詢，請稍後');
+$.ajax({
+  url: '<%=Url.Action("GetSelfAssessment","EmployeeEvalution") %>?random=' + Math.random(),
+  data: {},
+  cache: false,
+  type: 'POST',
+  dataType: 'json',
+  complete: function (jqXHR, exception) {
+    layer.close(loadi);
+  },
+  success: function (json) {
+    if (json.success) {
+    }
+    else{
+    }
+  },
+  error: function (jqXHR, exception) {
+    var msg = '';
+    if (jqXHR.status === 0) {
+      msg = 'Not connect.\n Verify Network.';
+    } else if (jqXHR.status == 404) {
+      msg = 'Requested page not found. [404]';
+    } else if (jqXHR.status == 500) {
+      msg = 'Internal Server Error [500].';
+    } else if (exception === 'parsererror') {
+      msg = 'Requested JSON parse failed.';
+    } else if (exception === 'timeout') {
+      msg = 'Time out error.';
+    } else if (exception === 'abort') {
+      msg = 'Ajax request aborted.';
+    } else {
+      msg = 'Uncaught Error.\n' + jqXHR.responseText;
+    }
+    alert(msg);
+    layer.msg('發生異常', 1, 3);
+  }
+});
+          
