@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CMS.Model
+
+namespace CMS.BLL
 {
-    public class Class1
+    public class BLLCompany
     {
     }
 }

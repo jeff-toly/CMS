@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseController.cs" />
+    <Compile Include="Company\CompanyController.cs" />
     <Compile Include="Home\HomeController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -53,6 +54,10 @@
     <ProjectReference Include="..\CMS.BLL\CMS.BLL.csproj">
       <Project>{a18e5314-ef7a-44c0-acaf-371011fce0e3}</Project>
       <Name>CMS.BLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CMS.Model\CMS.Model.csproj">
+      <Project>{75c29b2f-2601-4425-bf2b-5b93ba832591}</Project>
+      <Name>CMS.Model</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

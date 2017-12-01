@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace CMS.BLL
+namespace CMS.DAL
 {
-    public class Class1
+    class DALCompany
     {
     }
 }

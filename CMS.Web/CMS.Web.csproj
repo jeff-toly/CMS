@@ -184,6 +184,7 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Company\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -205,6 +206,10 @@
     <ProjectReference Include="..\CMS.Controller\CMS.ControllerCollection.csproj">
       <Project>{ca001738-e1e3-44b2-bec8-c113c3113949}</Project>
       <Name>CMS.ControllerCollection</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CMS.Model\CMS.Model.csproj">
+      <Project>{75c29b2f-2601-4425-bf2b-5b93ba832591}</Project>
+      <Name>CMS.Model</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
