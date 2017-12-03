@@ -1,0 +1,109 @@
+﻿@model CMS.Model.CompanyEntity
+
+@{
+    ViewBag.Title = "IE8测试-JqueryForm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>JqueryFormIE8</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.Hidden("validate", true)
+
+    <div class="form-horizontal">
+        <h4>CompanyEntity</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.ApproveRoute, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ApproveRoute, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ApproveRoute, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CompanyID, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CompanyID, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CompanyID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CompanyName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CompanyName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CompanyName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+                @*<input type="button" value="Send" class="btn btn-default" />*@
+            </div>
+        </div>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryform")
+    @Scripts.Render("~/bundles/layer")
+    <script type="text/javascript">
+        $(function () {
+            //$('form').submit(function () {
+            //    if ($('form').valid()) {
+            //        //通过执行的动作
+            //        var validate = CheckData();
+            //        if (validate) {   //死循环
+            //            $("form").submit();
+            //        }
+            //    }
+            //    return false;//永远禁止页面表单提交
+            //});
+            var validate = $("#validate").val();
+            var ajaxFormOption = {
+                type: "post",  //提交方式
+                dataType: "json", //数据类型
+                data: { validate: validate },//自定义数据参数，视情况添加
+                url: '@Url.Action("SaveCompany", "Company")', //请求url
+                beforeSubmit: function () {  //验证数据
+                    var validate = CheckData();
+                    if (!validate) return false;
+                },
+                success: function (json) { //提交成功的回调函数
+                    if (json.success) layer.msg("success");
+                    else layer.msg("false");
+                }
+            };
+            //form中有submit按钮——方式1
+            $('form').ajaxForm(ajaxFormOption);
+            ////form中有submit按钮——方式2
+            //$("#form1").submit(function () {
+            //    $(this).ajaxSubmit(ajaxFormOption);
+            //    return false;
+            //});
+            ////不需要submit按钮，可以是任何元素的click事件
+            //$("#myButton").click(function () {
+            //    $("#form1").ajaxSubmit(ajaxFormOption);
+            //    return false;
+            //});
+        });
+        function CheckData() {
+            var flag = false;
+            alert(flag.toString());
+            $("#validate").val(flag);
+            return flag;
+        }
+    </script>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

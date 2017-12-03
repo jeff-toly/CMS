@@ -12,6 +12,17 @@ namespace CMS.ControllerCollection.Company
     {
         public ActionResult Index()
         {
+            List<CompanyEntity> companyList = GetCompanyList();
+
+            return View(companyList);
+        }
+
+        /// <summary>
+        /// 获取公司列表
+        /// </summary>
+        /// <returns></returns>
+        private static List<CompanyEntity> GetCompanyList()
+        {
             List<CompanyEntity> companyList = new List<CompanyEntity>()
             {
                 new CompanyEntity(){ ApproveRoute = "1" },
@@ -26,6 +37,13 @@ namespace CMS.ControllerCollection.Company
                 new CompanyEntity(){ ApproveRoute = "3", CompanyID = Guid.NewGuid().ToString(), CompanyName = "工商银行", },
                 new CompanyEntity(){ ApproveRoute = "5", CompanyID = Guid.NewGuid().ToString(), CompanyName = "太平保险", },
             };
+            UpdateCompanyList(companyList, oldCompanyList);
+
+            return companyList;
+        }
+
+        private static void UpdateCompanyList(List<CompanyEntity> companyList, List<CompanyEntity> oldCompanyList)
+        {
             if (!companyList.Exists(t => t.ApproveRoute == "5"))
             {
                 companyList.Add(new CompanyEntity() { ApproveRoute = "5", CompanyID = Guid.NewGuid().ToString(), });
@@ -35,8 +53,20 @@ namespace CMS.ControllerCollection.Company
                 companyList.FindLast(t => t.ApproveRoute == "5").CompanyID = oldCompanyList.FindLast(t => t.ApproveRoute == "5").CompanyID;
                 companyList.FindLast(t => t.ApproveRoute == "5").CompanyName = oldCompanyList.FindLast(t => t.ApproveRoute == "5").CompanyName;
             }
+        }
 
-            return View(companyList);
+        public ActionResult JqueryFormIE8()
+        {
+            CompanyEntity company = new CompanyEntity();
+            return View(company);
+        }
+
+        [HttpPost]
+        public ActionResult SaveCompany(CompanyEntity company, bool validate)
+        {
+            if (!validate)
+                return Json(new { success = false, msg = "验证失败！" }, "text/plain");
+            return Json(new { success = true, msg = "保存成功！" }, "text/plain");
         }
     }
 }
