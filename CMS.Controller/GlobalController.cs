@@ -381,5 +381,59 @@ namespace TalentPool.web.Controllers
             }
             return sysRoleID;
         }
+	
+	/// <summary>
+        /// 解析Excel返回DataTable
+        /// </summary>
+	public DataTable ExcelDataTable(HttpPostedFileBase file)
+	{
+	    string fileid = SaveFile(file);//先保存文件，并获取文件ID
+	    BLAttactFile g_AttactFile = new BLAttactFile();
+            AttactFileVO fileInfo = g_AttactFile.QueryFilleByID(fileid);//根据文件ID获取文件内容
+            string filepath = Server.MapPath(fileInfo.FILEPATH);
+            string strConn = "Provider=Microsoft.Ace.OLEDB.12.0;Data Source=" + filepath + ";Extended Properties=Excel 12.0;";
+            OleDbConnection conn = new OleDbConnection(strConn);
+            OleDbDataAdapter oada = new OleDbDataAdapter("select * from [Sheet1$]", strConn);
+            DataSet ds = new DataSet();
+            oada.Fill(ds, "ExcelInfo");
+	    oada.Dispose();
+	    conn.Close();
+	    DataTable dt = ds.Tables["ExcelInfo"].DefaultView.ToTable();
+	    return dt;
+	}
+	
+	/// <summary>
+        /// 保存文件.
+        /// </summary>
+        /// <param name="Files"></param>
+        /// <returns></returns>
+        public string SaveFile(HttpPostedFileBase file)
+        {
+            string dir = "UploadFile";
+            AttactFileVO fileInfo = new AttactFileVO();
+            string uploadPath = Server.MapPath("~/") + dir;
+            if (!Directory.Exists(uploadPath))
+                Directory.CreateDirectory(uploadPath);                         //判斷物理路徑是否存在,若不存在則創建此物理路徑.
+            string fileActualName = DateTime.Now.ToString("yyyyMMddHHmmssfff");
+            string extension = Path.GetExtension(file.FileName);
+            string filePath = uploadPath + "\\" + fileActualName + extension;
+            if (file.FileName != "")//上傳文件
+            {
+                file.SaveAs(filePath);
+                string fileName = Path.GetFileName(file.FileName);
+                fileInfo.FILENAME = fileName;
+                fileInfo.FILEPATH = "/" + dir + "/" + fileActualName + extension;//william modified 
+                fileInfo.FILEID = Guid.NewGuid().ToString();
+                fileInfo.ENTRYUSER = LoginUser.USERID;
+                if (g_AttactFile.InsertFile(fileInfo) == 1)
+                    return fileInfo.FILEID;
+                else
+                    return "";
+            }
+            else
+            {
+                return "";
+            }
+        }
     }
 }
