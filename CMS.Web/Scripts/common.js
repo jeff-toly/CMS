@@ -1,8 +1,9 @@
 //按回車不提交表单
-$(document).on("keypress", ":input:not(textarea)", function (e) {
+$(document).keydown(function (e) {
   e = e ? e : window.event;
   var keycode = e.which ? e.which : e.keyCode;
-  if (keycode == 13) {
+  var type = e.target.type;
+  if (keycode == 13 && type != "textarea") {
     return false;
   }
 });
