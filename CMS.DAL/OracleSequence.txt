@@ -1,0 +1,90 @@
+学过SQL SERVER的都知道，SQL SERVER中通过identity关键字，让某一字段自增长。那么在Oracle中如何让字段自增长呢？-->序列
+
+序列: 是oacle提供的用于产生一系列唯一数字的数据库对象。
+
+Ø 自动提供唯一的数值
+
+Ø 共享对象
+
+Ø 主要用于提供主键值
+
+Ø 将序列值装入内存可以提高访问效率
+
+创建序列：
+
+1、  要有创建序列的权限 create sequence 或 create any sequence
+
+2、  创建序列的语法
+
+CREATE SEQUENCE sequence  //创建序列名称
+
+       [INCREMENT BY n]  //递增的序列值是n 如果n是正数就递增,如果是负数就递减 默认是1
+
+       [START WITH n]    //开始的值,递增默认是minvalue 递减是maxvalue
+
+       [{MAXVALUE n | NOMAXVALUE}] //最大值
+
+       [{MINVALUE n | NOMINVALUE}] //最小值
+
+       [{CYCLE | NOCYCLE}] //循环/不循环
+
+       [{CACHE n | NOCACHE}];//分配并存入到内存中
+
+实例应用
+
+1、创建一张表
+
+CREATE table cdpt(
+id number(6),
+name varchar2(30),
+constraint pk_id primary key(id)
+)
+
+2、创建序列
+
+CREATE SEQUENCE seq_cdpt
+Increment By 1--每次增量为1
+Start With 1--初始值默认为1
+Maxvalue 99999--增量的最大上限
+Minvalue 1--增量的最小底限
+Nocycle
+Nocache;
+
+3、使用序列，两种方法
+
+①、不使用触发器，在插入时在sql语句中调用序列
+
+--不使用触发器，在插入时在sql语句中调用序列
+Insert Into cdpt Values(seq_cdpt.nextval,'序列');
+Insert Into cdpt Values(seq_cdpt.nextval,'123');
+Commit;
+Select * From cdpt
+
+②、--建立触发器，当有数据插入表时，使用oracle序列为其去的递增的主键值
+
+Create Trigger cdpt_test Before Insert On cdpt
+For Each Row
+Begin
+Select seq_cdpt.nextval Into:new.id From dual;
+End;
+Insert Into cdpt Values('www');
+
+4、修改序列
+
+修改序列的增量, 最大值, 最小值, 循环选项, 或是否装入内存
+
+如：
+
+Alter sequence seq_cdpt increment by 2;
+
+修改序列的注意事项：
+
+Ø 必须是序列的拥有者或对序列有 ALTER 权限
+
+Ø 只有将来的序列值会被改变
+
+Ø 改变序列的初始值只能通过删除序列之后重建序列的方法实现
+
+5、删除序列
+
+drop  sequence seq_cdpt;
