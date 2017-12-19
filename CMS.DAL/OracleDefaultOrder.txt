@@ -1,0 +1,17 @@
+oracle排序問題
+
+
+select rowid, 
+   dbms_rowid.rowid_relative_fno(rowid) as rel_fno,
+   dbms_rowid.rowid_row_number(rowid) as row_num,
+   dbms_rowid.rowid_block_number(rowid) as block_num, 
+   dbms_rowid.rowid_object(rowid)
+from ASSESSMENTPROCEDURE 
+order by rowid
+
+
+
+SELECT COUNT (*), entrydate
+  FROM sysusers
+GROUP BY entrydate
+ORDER BY COUNT (*),entrydate
