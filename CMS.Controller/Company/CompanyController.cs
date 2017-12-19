@@ -65,19 +65,6 @@ namespace CMS.ControllerCollection.Company
         [HttpPost]
         public ActionResult SaveCompany(CompanyEntity company, bool validate)
         {
-            #region OCR图片处理
-
-            AspriseOCR.SetUp();
-            AspriseOCR ocr = new AspriseOCR();
-            ocr.StartEngine("eng", AspriseOCR.SPEED_FASTEST);
-
-            string s = ocr.Recognize(@"C:\Users\陶立\Pictures\2017-12\IMG_E0094.jpg", -1, -1, -1, -1, -1, AspriseOCR.RECOGNIZE_TYPE_ALL, AspriseOCR.OUTPUT_FORMAT_PLAINTEXT);
-            Console.WriteLine("OCR Result: " + s);
-
-            ocr.StopEngine();
-
-            #endregion
-
             if (!validate)
                 return Json(new { success = false, msg = "验证失败！" }, "text/plain");
             return Json(new { success = true, msg = "保存成功！" }, "text/plain");
