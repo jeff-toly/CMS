@@ -311,6 +311,7 @@ namespace asprise_ocr_api
             }
 
             requestLang = comboLang.Text.Trim();
+            requestLang = "eng";
             if (requestLang == null || requestLang.Length == 0)
             {
                 showMessageBox("Please select language first.", "Error");
@@ -361,7 +362,7 @@ namespace asprise_ocr_api
                 return;
             }
 
-            if (!requestLang.Equals(currentLang) || !requestPropsStart.Equals(currentEngineStartProps))
+            if (!requestLang.Equals(currentLang) || !requestPropsStart.Equals(currentEngineStartProps) || true)
             {
                 ocr.StopEngine();
                 currentLang = null;
