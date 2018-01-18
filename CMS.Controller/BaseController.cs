@@ -1,19 +1,24 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 
 namespace CMS.ControllerCollection
 {
     public class BaseController : Controller
     {
-        protected string DataTableToJson(DataTable dt)
+        protected string DataTableToJson2(DataTable dt)
         {
             if (dt == null || dt.Rows.Count == 0)
             {
@@ -165,6 +170,59 @@ namespace CMS.ControllerCollection
 
                 return sw.GetStringBuilder().ToString();
             }
+        }
+
+        public string RandomWithTicks()
+        {
+            var result = "";
+            int ticks = (int)DateTime.Now.Ticks;
+            var rnd = new Random(ticks);
+            var no = rnd.Next(0, 999999);
+            result = no.ToString().PadLeft(6, '0');
+            return result;
+        }
+
+        public string FileSendToService(HttpPostedFileBase file, string fileName)
+        {
+            Socket s = GetSocketOfServer();
+            string result = "";
+            if (s == null)
+            {
+                result = "连接创建失败";
+            }
+            else
+            {
+                List<Byte> contentList = new List<Byte>();
+                //文件内容
+                Byte[] fileContent = System.IO.File.ReadAllBytes(file.FileName);
+                contentList.AddRange(fileContent);
+                //文件校验
+                Byte[] checkContent = new Byte[8] { 1, 2, 3, 4, 5, 6, 7, 8, };
+                contentList.AddRange(checkContent);
+                //文件名
+                Byte[] _fileName = Encoding.ASCII.GetBytes(fileName);
+                contentList.AddRange(_fileName);
+                //文件名校验
+                Byte[] checkName = new Byte[8] { 1, 3, 5, 7, 2, 4, 6, 8, };
+                contentList.AddRange(checkName);
+                //向服务器发送信息
+                s.Send(contentList.ToArray(), contentList.Count, SocketFlags.None);
+                Thread.Sleep(1000);//暂停1s防止发送过快
+                result = "文件成功发送至服务器";
+            }
+            return result;
+        }
+
+        public static Socket GetSocketOfServer()
+        {
+            int port = 5050;
+            IPAddress iPAddress = IPAddress.Parse("192.168.1.105");
+            Socket s = null;
+            IPEndPoint ipe = new IPEndPoint(iPAddress, port);
+            Socket tempSocket = new Socket(ipe.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            tempSocket.Connect(ipe);
+            s = tempSocket;
+            return s;
         }
     }
 }
