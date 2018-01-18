@@ -1,0 +1,19 @@
+(In JavaScript)
+if (json.cblFMlist != null)
+{
+  var cblFMlist = json.cblFMlist;
+  var jsonCblFMlist = JSON.parse(cblFMlist);
+  $("#CblFMlistTd").html("");
+  var _html = "";
+  jsonCblFMlist.forEach(function (item, index) {
+      _html += '<input type="checkbox" value="' + item.AutoId + '" />' + item.Name;
+      if (index != 0 && index % 8 == 0)
+      {
+          _html += "<br />";
+      }
+  });
+  $("#CblFMlistTd").html(_html);
+}
+
+(In Controller)
+json.cblFMlist = ToJson(cblFMlist);//DataTable To Json : (DataTable類型)cblFMlist
